@@ -1,0 +1,24 @@
+#navbar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 60px;
+  background-color: #000;
+}
+
+.nav-items {
+  display: flex;
+  align-items: center;
+  height: 60px;
+  margin: 0 2rem;
+  font-size: 1.3rem;
+}
+
+.nav-items a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.nav-items h2 {
+  color: #fff;
+}
