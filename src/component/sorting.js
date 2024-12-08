@@ -33,8 +33,6 @@ const Sorting = () => {
         steps.push([...newArr]);
       }
     }
-    console.log(highlights);
-    console.log(steps);
 
     steps.forEach((step, index) => {
       setTimeout(() => {
@@ -69,8 +67,6 @@ const Sorting = () => {
       }
     }
 
-    console.log(highlights);
-    console.log(steps);
     steps.forEach((step, index) => {
       setTimeout(() => {
         setArr(step);
@@ -95,7 +91,6 @@ const Sorting = () => {
         j = j - 1;
       }
       //   }
-
       //   newArr[j + 1] = key;
       //   highlights.push([j + 1]);
       //   steps.push([...newArr]);
