@@ -11,40 +11,72 @@ const Sorting = () => {
   };
 
   const [arrLen, setArrLen] = useState(7);
-  const [arr, setArr] = useState(generateRandomArray(arrLen, 10, 50));
+  const [arr, setArr] = useState(generateRandomArray(arrLen, 10, 60));
   const [highlightedIndices, setHighlightedIndices] = useState([]);
+  const [playbackSpeed, setPlaybackSpeed] = useState(1000);
+  const [animation, setAnimation] = useState([]);
+  const setTimeoutId = [];
+
+  const handlePlaybackSpeed = (event) => {
+    if (animation) animation.forEach((x) => clearTimeout(x));
+    setHighlightedIndices([]);
+    setPlaybackSpeed(event.target.value);
+  };
 
   const handleReset = () => {
+    if (animation) animation.forEach((x) => clearTimeout(x));
+    setHighlightedIndices([]);
     setArr(generateRandomArray(arrLen, 10, 50));
   };
 
   const bubbleSort = () => {
+    if (animation) animation.forEach((x) => clearTimeout(x));
+    setHighlightedIndices([]);
     const newArr = [...arr];
     const steps = [];
     const highlights = [];
     for (let i = 0; i < newArr.length; ++i) {
       for (let j = 0; j < newArr.length - i - 1; ++j) {
-        highlights.push([j, j + 1]);
-        if (newArr[j] > newArr[j + 1]) {
-          let temp = newArr[j];
-          newArr[j] = newArr[j + 1];
-          newArr[j + 1] = temp;
-        }
+        highlights.push([
+          { index: j, type: "compare" },
+          { index: j + 1, type: "compare" },
+        ]);
         steps.push([...newArr]);
+        if (newArr[j] > newArr[j + 1]) {
+          highlights.push([
+            { index: j, type: "swap" },
+            { index: j + 1, type: "swap" },
+          ]);
+          steps.push([...newArr]);
+          [newArr[j], newArr[j + 1]] = [newArr[j + 1], newArr[j]];
+          highlights.push([
+            { index: j, type: "placement" },
+            { index: j + 1, type: "placement" },
+          ]);
+          steps.push([...newArr]);
+        }
       }
     }
 
     steps.forEach((step, index) => {
-      setTimeout(() => {
+      let id = setTimeout(() => {
         setArr(step);
         setHighlightedIndices(highlights[index] || []);
-      }, index * 1500);
+      }, index * playbackSpeed);
+      setTimeoutId.push(id);
     });
 
-    setTimeout(() => setHighlightedIndices([]), steps.length * 1500);
+    let id = setTimeout(
+      () => setHighlightedIndices([]),
+      steps.length * playbackSpeed
+    );
+    setTimeoutId.push(id);
+    setAnimation(setTimeoutId);
   };
 
   const selectionSort = () => {
+    if (animation) animation.forEach((x) => clearTimeout(x));
+    setHighlightedIndices([]);
     const newArr = [...arr];
     const steps = [];
     const highlights = [];
@@ -52,59 +84,133 @@ const Sorting = () => {
     for (let i = 0; i < n - 1; i++) {
       let min_idx = i;
       for (let j = i + 1; j < n; j++) {
-        highlights.push([i, j]);
+        highlights.push([
+          { index: i, type: "compare" },
+          { index: j, type: "compare" },
+        ]);
         steps.push([...newArr]);
         if (newArr[j] < newArr[min_idx]) {
           min_idx = j;
+          highlights.push([
+            { index: i, type: "swap" },
+            { index: j, type: "swap" },
+          ]);
+          steps.push([...newArr]);
         }
       }
       if (min_idx !== i) {
+        highlights.push([
+          { index: i, type: "swap" },
+          { index: min_idx, type: "swap" },
+        ]);
+        steps.push([...newArr]);
         let temp = newArr[i];
         newArr[i] = newArr[min_idx];
         newArr[min_idx] = temp;
-        highlights.push([i, min_idx]);
+        highlights.push([
+          { index: i, type: "placement" },
+          { index: min_idx, type: "placement" },
+        ]);
         steps.push([...newArr]);
       }
     }
 
     steps.forEach((step, index) => {
-      setTimeout(() => {
+      let id = setTimeout(() => {
         setArr(step);
         setHighlightedIndices(highlights[index] || []);
-      }, index * 1500);
+      }, index * playbackSpeed);
+      setTimeoutId.push(id);
     });
-    setTimeout(() => setHighlightedIndices([]), steps.length * 1500);
+    let id = setTimeout(
+      () => setHighlightedIndices([]),
+      steps.length * playbackSpeed
+    );
+    setTimeoutId.push(id);
+    setAnimation(setTimeoutId);
   };
 
+  // const insertionSort = () => {
+  //   const newArr = [...arr];
+  //   const steps = [];
+  //   const highlights = [];
+  //   for (let i = 0; i < newArr.length; i++) {
+  //     let j = i;
+  //     highlights.push([{ index: i, type: "compare" }]);
+  //     steps.push([...newArr]);
+  //     while (j > 0 && newArr[j - 1] > newArr[j]) {
+  //       highlights.push([
+  //         { index: i, type: "compare" },
+  //         { index: j - 1, type: "swap" },
+  //         { index: j, type: "swap" },
+  //       ]);
+  //       steps.push([...newArr]);
+  //       [newArr[j - 1], newArr[j]] = [newArr[j], newArr[j - 1]];
+  //       highlights.push([
+  //         { index: i, type: "compare" },
+  //         { index: j, type: "placement" },
+  //         { index: j - 1, type: "placement" },
+  //       ]);
+  //       steps.push([...newArr]);
+  //       j--;
+  //       // highlights.push([{ index: j, type: "compare" }]);
+  //       // steps.push([...newArr]);
+  //     }
+  //   }
+
+  //   steps.forEach((step, index) => {
+  //     setTimeout(() => {
+  //       setArr(step);
+  //       setHighlightedIndices(highlights[index] || []);
+  //     }, index * playbackSpeed);
+  //   });
+
+  //   setTimeout(() => setHighlightedIndices([]), steps.length * playbackSpeed);
+  // };
+
   const insertionSort = () => {
+    if (animation) animation.forEach((x) => clearTimeout(x));
+    setHighlightedIndices([]);
     const newArr = [...arr];
     const steps = [];
     const highlights = [];
-    for (let i = 1; i < newArr.length; i++) {
-      let key = newArr[i];
-      let j = i - 1;
-      while (j >= 0 && newArr[j] > key) {
-        newArr[j + 1] = newArr[j];
-        newArr[j] = key;
-        highlights.push([j, j + 1]);
+
+    for (let i = 0; i < newArr.length; i++) {
+      let j = i;
+      highlights.push([{ index: i, type: "compare" }]);
+      steps.push([...newArr]);
+      while (j > 0 && newArr[j - 1] > newArr[j]) {
+        highlights.push([
+          { index: i, type: "placement" },
+          { index: j - 1, type: "compare" },
+          { index: j, type: "compare" },
+        ]);
         steps.push([...newArr]);
-        j = j - 1;
+        [newArr[j - 1], newArr[j]] = [newArr[j], newArr[j - 1]];
+        highlights.push([
+          { index: i, type: "placement" },
+          { index: j - 1, type: "placement" },
+          { index: j, type: "placement" },
+        ]);
+        steps.push([...newArr]);
+        j--;
       }
-      //   }
-      //   newArr[j + 1] = key;
-      //   highlights.push([j + 1]);
-      //   steps.push([...newArr]);
     }
-    console.log(steps);
-    console.log(highlights);
+
     steps.forEach((step, index) => {
-      setTimeout(() => {
+      let id = setTimeout(() => {
         setArr(step);
         setHighlightedIndices(highlights[index] || []);
-      }, index * 1500);
+      }, index * playbackSpeed);
+      setTimeoutId.push(id);
     });
 
-    setTimeout(() => setHighlightedIndices([]), steps.length * 1500);
+    let id = setTimeout(
+      () => setHighlightedIndices([]),
+      steps.length * playbackSpeed
+    );
+    setTimeoutId.push(id);
+    setAnimation(setTimeoutId);
   };
 
   return (
@@ -129,19 +235,30 @@ const Sorting = () => {
             <button className="array-container-buttons" onClick={handleReset}>
               Random
             </button>
+            <select id="playback-speed" onChange={handlePlaybackSpeed}>
+              <option value={2000}>0.50x</option>
+              <option value={1350}>0.75x</option>
+              <option value={1000} selected="selected">
+                1.00x
+              </option>
+              <option value={650}>1.50x</option>
+              <option value={500}>2.00x</option>
+            </select>
           </div>
         </p>
         <div id="array-items-container">
           {arr.map((x, idx) => {
             return (
               <div
-                className="array-items"
-                id={x}
+                className={`array-items ${
+                  highlightedIndices.find((h) => h.index === idx)?.type
+                    ? `highlight-${
+                        highlightedIndices.find((h) => h.index === idx).type
+                      }`
+                    : "highlight-default"
+                }`}
                 style={{
                   height: `${x}%`,
-                  backgroundColor: highlightedIndices.includes(idx)
-                    ? "green"
-                    : "lightblue",
                 }}
               >
                 {x}

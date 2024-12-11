@@ -6,14 +6,11 @@
 #array-items-container {
   display: flex;
   justify-content: center;
+  width: fit-content;
   align-items: flex-end;
   height: 450px;
-}
-
-.array-items {
-  width: 50px;
-  margin: 2rem;
-  background-color: lightblue;
+  padding: 1rem;
+  margin: auto;
 }
 
 #array-button-container {
@@ -64,8 +61,37 @@
   color: #fff;
 }
 
+#playback-speed {
+  width: 5rem;
+  padding: 5px 8px 7px;
+  font-size: 0.9rem;
+  border-radius: 0.4rem;
+}
+
 #array-length-container {
   display: flex;
   align-items: center;
   gap: 1rem;
+}
+
+.array-items {
+  width: 50px;
+  margin: 2rem;
+  background-color: lightblue;
+}
+
+.highlight-compare {
+  background-color: orange;
+}
+
+.highlight-swap {
+  background-color: red;
+}
+
+.highlight-placement {
+  background-color: green;
+}
+
+.highlight-default {
+  background-color: lightblue;
 }
